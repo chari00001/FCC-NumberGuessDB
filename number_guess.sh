@@ -16,16 +16,13 @@ if [[ -z $USER_EXIST ]]
     INSERT_USER_RESULT=$($PSQL "INSERT INTO users(username) VALUES('$USERNAME');")
     USER_ID=$($PSQL "SELECT user_id FROM users WHERE username='$USERNAME';")
   else
+    USER_ID=$($PSQL "SELECT user_id FROM users WHERE username='$USERNAME';")
+    GAMES=$($PSQL "SELECT COUNT(*) FROM games WHERE user_id=$USER_ID;")
+    BEST=$($PSQL "SELECT MIN(guesses) FROM games WHERE user_id=$USER_ID;")
     echo "Welcome back, $NAME! You have played $GAMES games, and your best game took $BEST guesses."
-    INSERT_USER_RESULT=$($PSQL "INSERT INTO users(username) VALUES('$NAME');")
-    if [[ $INSERT_USER_RESULT = "INSERT 0 1" ]]
-      then 
-        USER_ID=$($PSQL "SELECT user_id FROM users WHERE username='$USERNAME';")
-    fi
+    
+    
 fi
-
-GAMES=$($PSQL "SELECT COUNT(*) FROM games WHERE user_id=$USER_ID;")
-BEST=$($PSQL "SELECT MIN(guesses) FROM games WHERE user_id=$USER_ID;")
 
 FLAG_CHECK=true
 TOTAL_GUESSES=1
@@ -34,6 +31,10 @@ while $FLAG_CHECK
 do
   echo "Guess the secret number between 1 and 1000:"
   read GUESS
+    if [[ $GUESS =~ ^[0-9]+$ ]]
+      then
+        echo "That is not an integer, guess again:"
+    fi
   if [[ $GUESS = $RANDOM_NUM ]]
     then
       echo "You guessed it in $TOTAL_GUESSES tries. The secret number was $RANDOM_NUM. Nice job!"
