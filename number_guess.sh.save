@@ -1,0 +1,16 @@
+#! /bin/bash
+PSQL="psql --username=freecodecamp --dbname=users -t --no-align --tuples-only -c"
+
+RANDOM_NUM=$((RANDOM % 100))
+
+echo "Enter your username:"
+read USERNAME
+
+USER_EXIST=$($PSQL "SELECT username FROM users WHERE username='$USERNAME';")
+
+if [[ -z $USER_EXIST ]]
+  then
+    echo -e "\necho $RANDOM_NUM
+"
+fi
+
