@@ -45,9 +45,11 @@ do
       if [[ $GUESS > $RANDOM_NUM ]]
         then
           echo "It's lower than that, guess again:"
-        else if [[ $GUESS < $RANDOM_NUM ]]
-          then 
-            echo "It's higher than that, guess again:"
+        else 
+          if [[ $GUESS < $RANDOM_NUM ]]
+            then 
+              echo "It's higher than that, guess again:"
+          fi
       fi
       ((TOTAL_GUESSES++))
   fi
